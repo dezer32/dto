@@ -8,7 +8,7 @@ use Attribute;
 use Dezer32\Libraries\Dto\Contracts\CasterInterface;
 use Dezer32\Libraries\Dto\Exceptions\InvalidCasterClassException;
 
-#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class Cast
 {
     private array $args;

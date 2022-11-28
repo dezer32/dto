@@ -10,6 +10,7 @@ use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\AttributedDto;
 
 class ClassTransformerAttributedDto extends AbstractUnitTestCase
 {
+    /** @dataProvider dtoDataProvider */
     public function testSuccessCanTransform(array $args): void
     {
         $dto = ClassTransformer::transform(AttributedDto::class, $args);

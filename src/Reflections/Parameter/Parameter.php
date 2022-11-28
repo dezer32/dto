@@ -8,7 +8,10 @@ use Dezer32\Libraries\Dto\Attributes\Cast;
 use Dezer32\Libraries\Dto\Contracts\CasterInterface;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Exceptions\DtoException;
+use ReflectionClass;
+use ReflectionNamedType;
 use ReflectionParameter;
+use ReflectionUnionType;
 
 class Parameter implements ParameterInterface
 {
@@ -24,6 +27,9 @@ class Parameter implements ParameterInterface
         $this->caster = $this->resolveCaster();
     }
 
+    /**
+     * todo Переписать проверку, так как есть union type
+     */
     public function isDataTransferObject(): bool
     {
         return is_subclass_of($this->getTypeName(), DataTransferObjectInterface::class);
@@ -55,13 +61,52 @@ class Parameter implements ParameterInterface
 
     private function resolveCaster(): ?CasterInterface
     {
+        /** @var Cast $attribute */
+
         $attributes = $this->reflectionParameter->getAttributes(Cast::class);
+
+        if (empty($attributes)) {
+            $attributes = $this->resolveCasterFromType();
+        }
 
         if (empty($attributes)) {
             return null;
         }
 
-        return $attributes[0]->newInstance();
+        $attribute = $attributes[0]->newInstance();
+
+        return new ($attribute->getCasterClass())(...$attribute->getArgs());
+    }
+
+    private function resolveCasterFromType(): array
+    {
+        $reflectionTypes = $this->reflectionParameter->getType();
+
+        $extractTypes = match ($reflectionTypes::class) {
+            ReflectionNamedType::class => [$reflectionTypes],
+            ReflectionUnionType::class => $reflectionTypes->getTypes()
+        };
+
+        foreach ($extractTypes as $type) {
+            $typeName = $type->getName();
+
+            if (!class_exists($typeName)) {
+                continue;
+            }
+
+            $class = new ReflectionClass($typeName);
+
+            do {
+                $attributes = $class->getAttributes(Cast::class);
+                $class = $class->getParentClass();
+            } while (empty($attributes) && $class !== false);
+
+            if (!empty($attributes)) {
+                return $attributes;
+            }
+        }
+
+        return [];
     }
 
     /**

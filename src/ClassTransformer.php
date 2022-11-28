@@ -32,9 +32,11 @@ class ClassTransformer implements ClassTransformerInterface
 
             if ($parameter->isDataTransferObject() && !$this->isDataTransferObject($value)) {
                 $value = self::transform($parameter->getTypeName(), $value);
+            } else {
+                $value = $parameter->castValue($value);
             }
 
-            $constructor[] = $parameter->castValue($value);
+            $constructor[] = $value;
         }
 
         return $class->make($constructor);
