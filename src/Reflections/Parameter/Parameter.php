@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Dezer32\Libraries\Dto\Reflections\Parameter;
 
+use Dezer32\Libraries\Dto\Attributes\Cast;
+use Dezer32\Libraries\Dto\Contracts\CasterInterface;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Exceptions\DtoException;
-use Dezer32\Libraries\Dto\Reflections\DtoClass\DtoClassInterface;
 use ReflectionParameter;
 
 class Parameter implements ParameterInterface
 {
-    private DtoClassInterface $declaringClass;
+    private ?CasterInterface $caster;
 
     /**
      * @throws DtoException
@@ -20,6 +21,7 @@ class Parameter implements ParameterInterface
         private ReflectionParameter $reflectionParameter,
     ) {
         $this->guard();
+        $this->caster = $this->resolveCaster();
     }
 
     public function isDataTransferObject(): bool
@@ -40,6 +42,26 @@ class Parameter implements ParameterInterface
     public function getDefaultValue(): mixed
     {
         return $this->reflectionParameter->getDefaultValue();
+    }
+
+    public function castValue(mixed $value): mixed
+    {
+        if ($this->caster !== null) {
+            $value = $this->caster->cast($value);
+        }
+
+        return $value;
+    }
+
+    private function resolveCaster(): ?CasterInterface
+    {
+        $attributes = $this->reflectionParameter->getAttributes(Cast::class);
+
+        if (empty($attributes)) {
+            return null;
+        }
+
+        return $attributes[0]->newInstance();
     }
 
     /**

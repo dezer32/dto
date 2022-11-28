@@ -8,7 +8,6 @@ use Dezer32\Libraries\Dto\Contracts\ClassTransformerInterface;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Reflections\DtoClass\DtoClass;
 use Dezer32\Libraries\Dto\Reflections\Parameter\ParameterInterface;
-use ReflectionParameter;
 
 class ClassTransformer implements ClassTransformerInterface
 {
@@ -32,10 +31,10 @@ class ClassTransformer implements ClassTransformerInterface
             $value = $this->getValue($parameter);
 
             if ($parameter->isDataTransferObject() && !$this->isDataTransferObject($value)) {
-                $constructor[] = self::transform($parameter->getTypeName(), $value);
-            } else {
-                $constructor[] = $value;
+                $value = self::transform($parameter->getTypeName(), $value);
             }
+
+            $constructor[] = $parameter->castValue($value);
         }
 
         return $class->make($constructor);

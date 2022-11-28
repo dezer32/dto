@@ -11,4 +11,6 @@ interface ParameterInterface
     public function getTypeName(): string;
 
     public function getDefaultValue(): mixed;
+
+    public function castValue(mixed $value): mixed;
 }
