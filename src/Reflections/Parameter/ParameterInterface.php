@@ -10,6 +10,8 @@ interface ParameterInterface
 
     public function getTypeName(): string;
 
+    public function hasDefaultValue(): bool;
+
     public function getDefaultValue(): mixed;
 
     public function castValue(mixed $value): mixed;

@@ -32,7 +32,7 @@ class Transformer implements TransformerInterface
         foreach ($class->getParameters() as $parameter) {
             $value = $this->getValue($parameter);
 
-            if ($parameter->isDataTransferObject() && !$this->isDataTransferObject($value)) {
+            if ($parameter->isDataTransferObject() && !$this->isDto($value)) {
                 $value = self::transform($parameter->getTypeName(), $value);
             } else {
                 $value = $parameter->castValue($value);
@@ -44,13 +44,12 @@ class Transformer implements TransformerInterface
         return $class->make($constructor);
     }
 
-    private function isDataTransferObject(mixed $value): bool
+    private function isDto(mixed $value): bool
     {
-        return is_subclass_of($value, DataTransferObjectInterface::class)
-            || $this->isAttributedDataTransferObject($value);
+        return is_subclass_of($value, DataTransferObjectInterface::class) || $this->isAttributedDto($value);
     }
 
-    private function isAttributedDataTransferObject(mixed $value): bool
+    private function isAttributedDto(mixed $value): bool
     {
         if (!is_object($value)) {
             return false;
@@ -68,8 +67,10 @@ class Transformer implements TransformerInterface
         if (isset($this->args[$parameter->getName()])) {
             $value = $this->args[$parameter->getName()];
             unset($this->args[$parameter->getName()]);
-        } else {
+        } elseif ($parameter->hasDefaultValue()) {
             $value = $parameter->getDefaultValue();
+        } else {
+            $value = null;
         }
 
         return $value;

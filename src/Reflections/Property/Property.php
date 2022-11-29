@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Dezer32\Libraries\Dto\Reflections\Property;
 
+use Dezer32\Libraries\Dto\Attributes\Cast;
 use Dezer32\Libraries\Dto\Attributes\DataTransferObject;
+use Dezer32\Libraries\Dto\Casters\ArrayCaster;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -23,7 +25,7 @@ class Property implements PropertyInterface
         return $this->reflectionProperty->getName();
     }
 
-    public function getValue(DataTransferObjectInterface $object): mixed
+    public function getValue(mixed $object): mixed
     {
         $this->reflectionProperty->setAccessible(true);
         $value = $this->reflectionProperty->getValue($object);
@@ -47,6 +49,19 @@ class Property implements PropertyInterface
         }
 
         return false;
+    }
+
+    public function isList(): bool
+    {
+        $attributes = $this->reflectionProperty->getAttributes(Cast::class);
+        if (empty($attributes)) {
+            return false;
+        }
+
+        /** @var Cast $attribute */
+        $attribute = $attributes[0]->newInstance();
+
+        return $attribute->getCasterClass() === ArrayCaster::class;
     }
 
     private function isAttributedDto(string $className): bool

@@ -69,6 +69,11 @@ class Parameter implements ParameterInterface
         return $this->reflectionParameter->getType()?->getName();
     }
 
+    public function hasDefaultValue(): bool
+    {
+        return $this->reflectionParameter->isDefaultValueAvailable();
+    }
+
     public function getDefaultValue(): mixed
     {
         return $this->reflectionParameter->getDefaultValue();

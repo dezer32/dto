@@ -11,4 +11,6 @@ interface PropertyInterface
     public function getValue(DataTransferObjectInterface $object): mixed;
 
     public function isDto(): bool;
+
+    public function isList(): bool;
 }

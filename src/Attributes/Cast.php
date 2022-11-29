@@ -24,6 +24,11 @@ class Cast
         $this->args = $args;
     }
 
+    public function getCasterClass(): string
+    {
+        return $this->casterClass;
+    }
+
     public function getCaster(): CasterInterface
     {
         return new $this->casterClass(...$this->args);
