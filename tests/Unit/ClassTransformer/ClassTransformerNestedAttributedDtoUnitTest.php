@@ -6,7 +6,7 @@ namespace Dezer32\Libraries\Dto\Test\Unit\ClassTransformer;
 
 use Dezer32\Libraries\Dto\ClassTransformer;
 use Dezer32\Libraries\Dto\Test\Unit\AbstractUnitTestCase;
-use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\AnotherClass;
+use Dezer32\Libraries\Dto\Test\Unit\Fixtures\AnotherClasses\AnotherAttributedClass;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\NestedAnotherAttributedDto;
 
 class ClassTransformerNestedAttributedDtoUnitTest extends AbstractUnitTestCase
@@ -33,7 +33,7 @@ class ClassTransformerNestedAttributedDtoUnitTest extends AbstractUnitTestCase
         yield [
             'test_text',
             [
-                'dto' => new AnotherClass('test_text'),
+                'dto' => new AnotherAttributedClass('test_text'),
             ],
         ];
     }

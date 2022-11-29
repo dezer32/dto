@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Dezer32\Libraries\Dto\Reflections\Parameter;
 
 use Dezer32\Libraries\Dto\Attributes\Cast;
+use Dezer32\Libraries\Dto\Attributes\DefaultCast;
 use Dezer32\Libraries\Dto\Contracts\CasterInterface;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Exceptions\DtoException;
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionParameter;
@@ -61,7 +63,6 @@ class Parameter implements ParameterInterface
 
     private function resolveCaster(): ?CasterInterface
     {
-        /** @var Cast $attribute */
 
         $attributes = $this->reflectionParameter->getAttributes(Cast::class);
 
@@ -70,12 +71,13 @@ class Parameter implements ParameterInterface
         }
 
         if (empty($attributes)) {
-            return null;
+            return $this->resolveCasterFromDefaults();
         }
 
+        /** @var Cast $attribute */
         $attribute = $attributes[0]->newInstance();
 
-        return new ($attribute->getCasterClass())(...$attribute->getArgs());
+        return $attribute->getCaster();
     }
 
     private function resolveCasterFromType(): array
@@ -107,6 +109,33 @@ class Parameter implements ParameterInterface
         }
 
         return [];
+    }
+
+    private function resolveCasterFromDefaults(): ?CasterInterface
+    {
+        $reflectionClass = $this->reflectionParameter->getDeclaringClass();
+
+        $defaultCastAttributes = [];
+        do {
+            array_push($defaultCastAttributes, ...$reflectionClass->getAttributes(DefaultCast::class));
+            $reflectionClass = $reflectionClass->getParentClass();
+        } while ($reflectionClass !== false);
+
+        if (empty($defaultCastAttributes)) {
+            return null;
+        }
+
+        /** @var ReflectionAttribute $attribute */
+        foreach ($defaultCastAttributes as $attribute) {
+            /** @var DefaultCast $defaultCast */
+            $defaultCast = $attribute->newInstance();
+
+            if ($defaultCast->accepts($this->reflectionParameter)) {
+                return $defaultCast->getCaster();
+            }
+        }
+
+        return null;
     }
 
     /**
