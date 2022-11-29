@@ -2,7 +2,7 @@
 
 namespace Dezer32\Libraries\Dto\Contracts;
 
-interface ClassTransformerInterface
+interface TransformerInterface
 {
     /**
      * @template T as object

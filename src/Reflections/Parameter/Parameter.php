@@ -29,7 +29,7 @@ class Parameter implements ParameterInterface
         $this->guard();
         $this->caster = $this->resolveCaster();
     }
-    
+
     public function isDataTransferObject(): bool
     {
         $types = $this->extractTypes();

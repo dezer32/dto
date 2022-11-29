@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Dezer32\Libraries\Dto\Test\Unit\ClassTransformer;
 
-use Dezer32\Libraries\Dto\ClassTransformer;
+use Dezer32\Libraries\Dto\Transformer;
 use Dezer32\Libraries\Dto\Test\Unit\AbstractUnitTestCase;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\DefaultsAnotherAttributesDto;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\MomDefaultsAnotherAttributedDto;
 
-class ClassTransformerDefaultsDto extends AbstractUnitTestCase
+class TransformerDefaultsDto extends AbstractUnitTestCase
 {
     /** @dataProvider dtoDataProvider */
     public function testSuccessCanTransform(
@@ -18,7 +18,7 @@ class ClassTransformerDefaultsDto extends AbstractUnitTestCase
         string $expectedString
     ): void {
         /** @var DefaultsAnotherAttributesDto $dto */
-        $dto = ClassTransformer::transform($classDto, $args);
+        $dto = Transformer::transform($classDto, $args);
 
         self::assertSame($expectedString, $dto->getClass()->getText());
     }

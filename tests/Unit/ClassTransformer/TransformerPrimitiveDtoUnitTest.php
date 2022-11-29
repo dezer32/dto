@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Dezer32\Libraries\Dto\Test\Unit\ClassTransformer;
 
-use Dezer32\Libraries\Dto\ClassTransformer;
+use Dezer32\Libraries\Dto\Transformer;
 use Dezer32\Libraries\Dto\Test\Unit\AbstractUnitTestCase;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\PrimitiveDto;
 
-final class ClassTransformerPrimitiveDtoUnitTest extends AbstractUnitTestCase
+final class TransformerPrimitiveDtoUnitTest extends AbstractUnitTestCase
 {
     /** @dataProvider dtoDataProvider */
     public function testSuccessCanTransform(array $args): void
     {
-        $dto = ClassTransformer::transform(PrimitiveDto::class, $args);
+        $dto = Transformer::transform(PrimitiveDto::class, $args);
 
         self::assertSame($args['int'], $dto->getInt());
         self::assertSame($args['float'], $dto->getFloat());
