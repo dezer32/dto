@@ -229,6 +229,7 @@ declare(strict_types=1);
 use Dezer32\Libraries\Dto\Attributes\DefaultCast;
 
 #[DefaultCast(AnotherClass::class, DefaultCasterClass::class)]
+#[DataTransferObject]
 class TestDto
 {
     public function __construct(
