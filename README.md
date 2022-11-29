@@ -122,7 +122,138 @@ class TestDto
 }
 ```
 
+```php
+<?php
+
+declare(strict_types=1);
+
+use Dezer32\Libraries\Dto\Transformer;
+
+$dto = Transformer::transform(TestDto::class, ['text' => 'test text.']);
+
+echo $dto->getText(); //New string and test text.
+```
+
 ### #[DefaultCast()]
+
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Dezer32\Libraries\Dto\Attributes\DefaultCast;
+use Dezer32\Libraries\Dto\Contracts\CasterInterface;
+use Dezer32\Libraries\Dto\Transformer;
+
+class DefaultCasterClass implements CasterInterface
+{
+    public function cast(mixed $value): AnotherClass
+    {
+        return new AnotherClass('New string and ' . $value);
+    }
+}
+
+class AnotherClass
+{
+    public function __construct(
+        private string $text
+    ) {
+    }
+
+    public function getText(): string
+    {
+        return $this->text;
+    }
+}
+
+#[DefaultCast(AnotherClass::class, DefaultCasterClass::class)]
+class TestDto
+{
+    public function __construct(
+        private AnotherClass $object,
+    ) {
+    }
+
+    public function getObject(): AnotherClass
+    {
+        return $this->object;
+    }
+}
+
+$dto = Transformer::transform(TestDto::class, ['text' => 'test text.']);
+
+echo $dto->getObject()->getText(); //New string and test text.
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Dezer32\Libraries\Dto\Contracts\CasterInterface;
+
+class DefaultCasterClass implements CasterInterface
+{
+    public function cast(mixed $value): AnotherClass
+    {
+        return new AnotherClass('New string and ' . $value);
+    }
+}
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+class AnotherClass
+{
+    public function __construct(
+        private string $text
+    ) {
+    }
+
+    public function getText(): string
+    {
+        return $this->text;
+    }
+}
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Dezer32\Libraries\Dto\Attributes\DefaultCast;
+
+#[DefaultCast(AnotherClass::class, DefaultCasterClass::class)]
+class TestDto
+{
+    public function __construct(
+        private AnotherClass $object,
+    ) {
+    }
+
+    public function getObject(): AnotherClass
+    {
+        return $this->object;
+    }
+}
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Dezer32\Libraries\Dto\Transformer;
+
+$dto = Transformer::transform(TestDto::class, ['text' => 'test text.']);
+
+echo $dto->getObject()->getText(); //New string and test text.
+```
 
 ### List of DTOs #[Cast(ArrayCast::class, ConcreteDto::class)]
 
@@ -130,8 +261,6 @@ class TestDto
 <?php
 
 declare(strict_types=1);
-
-namespace Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto;
 
 use Dezer32\Libraries\Dto\Attributes\DataTransferObject;
 
@@ -154,8 +283,6 @@ class SimpleDto
 <?php
 
 declare(strict_types=1);
-
-namespace Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto;
 
 use Dezer32\Libraries\Dto\Attributes\Cast;
 use Dezer32\Libraries\Dto\Attributes\DataTransferObject;
