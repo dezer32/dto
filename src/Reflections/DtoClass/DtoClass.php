@@ -9,13 +9,18 @@ use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Exceptions\DtoException;
 use Dezer32\Libraries\Dto\Reflections\Parameter\Parameter;
 use Dezer32\Libraries\Dto\Reflections\Parameter\ParameterInterface;
+use Dezer32\Libraries\Dto\Reflections\Property\Property;
+use Dezer32\Libraries\Dto\Reflections\Property\PropertyInterface;
 use ReflectionClass;
+use ReflectionProperty;
 
 class DtoClass implements DtoClassInterface
 {
     private ReflectionClass $reflectionClass;
     /** @var ParameterInterface[] */
     private array $parameters;
+    /** @var PropertyInterface[] */
+    private array $properties;
 
     public function __construct(
         private string $className,
@@ -39,6 +44,24 @@ class DtoClass implements DtoClassInterface
         }
 
         return $this->parameters;
+    }
+
+    public function getProperties(): array
+    {
+        if (!isset($this->properties)) {
+            $reflectionProperties = $this->getReflectionClass()->getProperties(ReflectionProperty::IS_PRIVATE);
+
+            $this->properties = [];
+            foreach ($reflectionProperties as $property) {
+                if ($property->isStatic()) {
+                    continue;
+                }
+
+                $this->properties[] = new Property($property);
+            }
+        }
+
+        return $this->properties;
     }
 
     private function getReflectionClass(): ReflectionClass
