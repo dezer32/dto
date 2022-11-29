@@ -85,7 +85,6 @@ class Parameter implements ParameterInterface
 
     private function resolveCaster(): ?CasterInterface
     {
-
         $attributes = $this->reflectionParameter->getAttributes(Cast::class);
 
         if (empty($attributes)) {

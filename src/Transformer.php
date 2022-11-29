@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Dezer32\Libraries\Dto;
 
 use Dezer32\Libraries\Dto\Attributes\DataTransferObject as DataTransferObjectAttribute;
-use Dezer32\Libraries\Dto\Contracts\TransformerInterface;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
+use Dezer32\Libraries\Dto\Contracts\TransformerInterface;
 use Dezer32\Libraries\Dto\Reflections\DtoClass\DtoClass;
 use Dezer32\Libraries\Dto\Reflections\Parameter\ParameterInterface;
+use ReflectionClass;
 
 class Transformer implements TransformerInterface
 {
@@ -55,7 +56,7 @@ class Transformer implements TransformerInterface
             return false;
         }
 
-        $reflectionClass = new \ReflectionClass($value);
+        $reflectionClass = new ReflectionClass($value);
 
         $attributes = $reflectionClass->getAttributes(DataTransferObjectAttribute::class);
 
