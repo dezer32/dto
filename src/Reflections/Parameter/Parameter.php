@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dezer32\Libraries\Dto\Reflections\Parameter;
 
 use Dezer32\Libraries\Dto\Attributes\Cast;
+use Dezer32\Libraries\Dto\Attributes\DataTransferObject;
 use Dezer32\Libraries\Dto\Attributes\DefaultCast;
 use Dezer32\Libraries\Dto\Contracts\CasterInterface;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
@@ -28,13 +29,34 @@ class Parameter implements ParameterInterface
         $this->guard();
         $this->caster = $this->resolveCaster();
     }
-
-    /**
-     * todo Переписать проверку, так как есть union type
-     */
+    
     public function isDataTransferObject(): bool
     {
-        return is_subclass_of($this->getTypeName(), DataTransferObjectInterface::class);
+        $types = $this->extractTypes();
+        /** @var ReflectionNamedType $type */
+        foreach ($types as $type) {
+            if (
+                is_subclass_of($type->getName(), DataTransferObjectInterface::class)
+                || $this->isAttributedDataTransferObject($type->getName())
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isAttributedDataTransferObject(string $className): bool
+    {
+        if (!class_exists($className)) {
+            return false;
+        }
+
+        $reflectionClass = new ReflectionClass($className);
+
+        $attributes = $reflectionClass->getAttributes(DataTransferObject::class);
+
+        return !empty($attributes);
     }
 
     public function getName(): string
@@ -136,6 +158,16 @@ class Parameter implements ParameterInterface
         }
 
         return null;
+    }
+
+    private function extractTypes(): array
+    {
+        $reflectionTypes = $this->reflectionParameter->getType();
+
+        return match ($reflectionTypes::class) {
+            ReflectionNamedType::class => [$reflectionTypes],
+            ReflectionUnionType::class => $reflectionTypes->getTypes()
+        };
     }
 
     /**

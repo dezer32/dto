@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dezer32\Libraries\Dto\Reflections\DtoClass;
 
+use Dezer32\Libraries\Dto\Attributes\DataTransferObject;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Exceptions\DtoException;
 use Dezer32\Libraries\Dto\Reflections\Parameter\Parameter;
@@ -22,7 +23,7 @@ class DtoClass implements DtoClassInterface
         $this->guard();
     }
 
-    public function make(array $args): DataTransferObjectInterface
+    public function make(array $args): object
     {
         return $this->getReflectionClass()->newInstanceArgs($args);
     }
@@ -62,6 +63,14 @@ class DtoClass implements DtoClassInterface
 
     private function isDataTransferObject(): bool
     {
-        return is_subclass_of($this->className, DataTransferObjectInterface::class);
+        return is_subclass_of($this->className, DataTransferObjectInterface::class)
+            || $this->isAttributedDataTransferObject();
+    }
+
+    private function isAttributedDataTransferObject(): bool
+    {
+        $attributes = $this->getReflectionClass()->getAttributes(DataTransferObject::class);
+
+        return !empty($attributes);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dezer32\Libraries\Dto;
 
+use Dezer32\Libraries\Dto\Attributes\DataTransferObject as DataTransferObjectAttribute;
 use Dezer32\Libraries\Dto\Contracts\ClassTransformerInterface;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Reflections\DtoClass\DtoClass;
@@ -42,9 +43,23 @@ class ClassTransformer implements ClassTransformerInterface
         return $class->make($constructor);
     }
 
-    private function isDataTransferObject(mixed $mixed): bool
+    private function isDataTransferObject(mixed $value): bool
     {
-        return is_subclass_of($mixed, DataTransferObjectInterface::class);
+        return is_subclass_of($value, DataTransferObjectInterface::class)
+            || $this->isAttributedDataTransferObject($value);
+    }
+
+    private function isAttributedDataTransferObject(mixed $value): bool
+    {
+        if (!is_object($value)) {
+            return false;
+        }
+
+        $reflectionClass = new \ReflectionClass($value);
+
+        $attributes = $reflectionClass->getAttributes(DataTransferObjectAttribute::class);
+
+        return !empty($attributes);
     }
 
     private function getValue(ParameterInterface $parameter): mixed
