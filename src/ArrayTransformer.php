@@ -28,7 +28,7 @@ class ArrayTransformer implements ArrayTransformerInterface
         foreach ($this->class->getProperties() as $property) {
             $value = $property->getValue($this->object);
             if ($property->isDto()) {
-                $value = $value->toArray();
+                $value = self::transform($value);
             }
             if ($property->isList()) {
                 $value = $this->list2array($value);

@@ -6,6 +6,7 @@ namespace Dezer32\Libraries\Dto\Test\Unit\DataTransferObject;
 
 use Dezer32\Libraries\Dto\Test\Unit\AbstractUnitTestCase;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\PrimitiveDto;
+use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\UpperNestedAttributedDto;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\UpperNestedDto;
 use Dezer32\Libraries\Dto\Transformer;
 
@@ -32,6 +33,14 @@ class Dto2ArrayUnitTest extends AbstractUnitTestCase
         ];
         yield [
             UpperNestedDto::class,
+            [
+                'inner_dto' => [
+                    'nested_var' => $this->getFaker()->text(),
+                ],
+            ],
+        ];
+        yield [
+            UpperNestedAttributedDto::class,
             [
                 'inner_dto' => [
                     'nested_var' => $this->getFaker()->text(),
