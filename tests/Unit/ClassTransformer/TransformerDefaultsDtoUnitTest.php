@@ -9,7 +9,7 @@ use Dezer32\Libraries\Dto\Test\Unit\AbstractUnitTestCase;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\DefaultsAnotherAttributesDto;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\MomDefaultsAnotherAttributedDto;
 
-class TransformerDefaultsDto extends AbstractUnitTestCase
+class TransformerDefaultsDtoUnitTest extends AbstractUnitTestCase
 {
     /** @dataProvider dtoDataProvider */
     public function testSuccessCanTransform(

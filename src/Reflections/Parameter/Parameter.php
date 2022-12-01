@@ -7,6 +7,7 @@ namespace Dezer32\Libraries\Dto\Reflections\Parameter;
 use Dezer32\Libraries\Dto\Attributes\Cast;
 use Dezer32\Libraries\Dto\Attributes\DataTransferObject;
 use Dezer32\Libraries\Dto\Attributes\DefaultCast;
+use Dezer32\Libraries\Dto\Attributes\MapFrom;
 use Dezer32\Libraries\Dto\Contracts\CasterInterface;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Exceptions\DtoException;
@@ -19,6 +20,7 @@ use ReflectionUnionType;
 class Parameter implements ParameterInterface
 {
     private ?CasterInterface $caster;
+    private string | int $name;
 
     /**
      * @throws DtoException
@@ -59,9 +61,9 @@ class Parameter implements ParameterInterface
         return !empty($attributes);
     }
 
-    public function getName(): string
+    public function getName(): string | int
     {
-        return $this->reflectionParameter->getName();
+        return $this->name ??= $this->resolveMappedName();
     }
 
     public function getTypeName(): string
@@ -162,6 +164,17 @@ class Parameter implements ParameterInterface
         }
 
         return null;
+    }
+
+    private function resolveMappedName(): string | int
+    {
+        $attributes = $this->reflectionParameter->getAttributes(MapFrom::class);
+
+        if (empty($attributes)) {
+            return $this->reflectionParameter->getName();
+        }
+
+        return $attributes[0]->newInstance()->getName();
     }
 
     private function extractTypes(): array

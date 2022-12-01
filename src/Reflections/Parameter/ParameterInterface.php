@@ -6,7 +6,7 @@ interface ParameterInterface
 {
     public function isDataTransferObject(): bool;
 
-    public function getName(): string;
+    public function getName(): string | int;
 
     public function getTypeName(): string;
 

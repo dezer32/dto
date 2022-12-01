@@ -8,7 +8,7 @@ use Dezer32\Libraries\Dto\Transformer;
 use Dezer32\Libraries\Dto\Test\Unit\AbstractUnitTestCase;
 use Dezer32\Libraries\Dto\Test\Unit\Fixtures\Dto\AttributedDto;
 
-class TransformerAttributedDto extends AbstractUnitTestCase
+class TransformerAttributedDtoUnitTest extends AbstractUnitTestCase
 {
     /** @dataProvider dtoDataProvider */
     public function testSuccessCanTransform(array $args): void
