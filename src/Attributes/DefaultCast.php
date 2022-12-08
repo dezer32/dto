@@ -8,6 +8,7 @@ use Attribute;
 use Dezer32\Libraries\Dto\Contracts\CasterInterface;
 use ReflectionNamedType;
 use ReflectionParameter;
+use ReflectionProperty;
 use ReflectionUnionType;
 
 #[Attribute(Attribute::TARGET_CLASS, Attribute::IS_REPEATABLE)]
@@ -23,7 +24,7 @@ class DefaultCast
         $this->args = $args;
     }
 
-    public function accepts(ReflectionParameter $property): bool
+    public function accepts(ReflectionParameter | ReflectionProperty $property): bool
     {
         $type = $property->getType();
 
