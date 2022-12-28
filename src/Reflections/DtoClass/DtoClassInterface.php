@@ -2,20 +2,20 @@
 
 namespace Dezer32\Libraries\Dto\Reflections\DtoClass;
 
-use Dezer32\Libraries\Dto\Reflections\Parameter\ParameterInterface;
-use Dezer32\Libraries\Dto\Reflections\Property\PropertyInterface;
+use Dezer32\Libraries\Dto\Reflections\Field\Parameter;
+use Dezer32\Libraries\Dto\Reflections\Field\Property;
 
 interface DtoClassInterface
 {
     public function make(array $args): object;
 
     /**
-     * @return ParameterInterface[]
+     * @return Parameter[]
      */
     public function getParameters(): array;
 
     /**
-     * @return PropertyInterface[]
+     * @return Property[]
      */
     public function getProperties(): array;
 }

@@ -7,19 +7,17 @@ namespace Dezer32\Libraries\Dto\Reflections\DtoClass;
 use Dezer32\Libraries\Dto\Attributes\DataTransferObject;
 use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 use Dezer32\Libraries\Dto\Exceptions\DtoException;
-use Dezer32\Libraries\Dto\Reflections\Parameter\Parameter;
-use Dezer32\Libraries\Dto\Reflections\Parameter\ParameterInterface;
-use Dezer32\Libraries\Dto\Reflections\Property\Property;
-use Dezer32\Libraries\Dto\Reflections\Property\PropertyInterface;
+use Dezer32\Libraries\Dto\Reflections\Field\Parameter;
+use Dezer32\Libraries\Dto\Reflections\Field\Property;
 use ReflectionClass;
 use ReflectionProperty;
 
 class DtoClass implements DtoClassInterface
 {
     private ReflectionClass $reflectionClass;
-    /** @var ParameterInterface[] */
+    /** @var Parameter[] */
     private array $parameters;
-    /** @var PropertyInterface[] */
+    /** @var Property[] */
     private array $properties;
 
     public function __construct(
