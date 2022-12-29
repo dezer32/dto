@@ -2,6 +2,10 @@
 
 ## Introduce
 
+Library for use DataTransferObject on your projects.
+
+P.S.: For test we need generate DTO.. I have solution: [dezer32/dto-faker](https://github.com/dezer32/dto-faker.git)
+
 ## Installation
 
 ### 1. Install package
@@ -135,7 +139,6 @@ echo $dto->getText(); //New string and test text.
 ```
 
 ### #[DefaultCast()]
-
 
 ```php
 <?php
