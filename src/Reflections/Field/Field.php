@@ -113,6 +113,11 @@ class Field implements FieldInterface
         return $attributes[0]->newInstance();
     }
 
+    public function getTypes(): array
+    {
+        return $this->extractTypes();
+    }
+
     private function resolveMappedName(): string|int
     {
         $attribute = $this->getAttributeInstance(MapFrom::class);

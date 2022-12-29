@@ -23,4 +23,6 @@ interface FieldInterface
     public function castValue(mixed $value): mixed;
 
     public function getAttributeInstance(string $className): ?object;
+
+    public function getTypes(): array;
 }
