@@ -20,11 +20,11 @@ use ReflectionUnionType;
 class Field implements FieldInterface
 {
     protected ?CasterInterface $caster;
-    protected string | int $name;
-    protected ReflectionProperty | ReflectionParameter $property;
+    protected string|int $name;
+    protected ReflectionProperty|ReflectionParameter $property;
 
     public function __construct(
-        ReflectionProperty | ReflectionParameter $property
+        ReflectionProperty|ReflectionParameter $property
     ) {
         $this->property = $property;
         $this->guard();
@@ -40,7 +40,7 @@ class Field implements FieldInterface
         return $value;
     }
 
-    public function getName(): string | int
+    public function getName(): string|int
     {
         return $this->name ??= $this->resolveMappedName();
     }
@@ -73,13 +73,11 @@ class Field implements FieldInterface
 
     public function isList(): bool
     {
-        $attributes = $this->property->getAttributes(Cast::class);
-        if (empty($attributes)) {
+        $attribute = $this->getAttributeInstance(Cast::class);
+
+        if ($attribute === null) {
             return false;
         }
-
-        /** @var Cast $attribute */
-        $attribute = $attributes[0]->newInstance();
 
         return $attribute->getCasterClass() === ArrayCaster::class;
     }
@@ -97,15 +95,33 @@ class Field implements FieldInterface
         return false;
     }
 
-    private function resolveMappedName(): string | int
+    /**
+     * @template T as object
+     *
+     * @param class-string<T> $className
+     *
+     * @return T|null
+     */
+    public function getAttributeInstance(string $className): ?object
     {
-        $attributes = $this->property->getAttributes(MapFrom::class);
+        $attributes = $this->property->getAttributes($className);
 
         if (empty($attributes)) {
+            return null;
+        }
+
+        return $attributes[0]->newInstance();
+    }
+
+    private function resolveMappedName(): string|int
+    {
+        $attribute = $this->getAttributeInstance(MapFrom::class);
+
+        if ($attribute === null) {
             return $this->property->getName();
         }
 
-        return $attributes[0]->newInstance()->getName();
+        return $attribute->getName();
     }
 
     private function extractTypes(): array

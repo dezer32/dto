@@ -6,7 +6,7 @@ use Dezer32\Libraries\Dto\Contracts\DataTransferObjectInterface;
 
 interface FieldInterface
 {
-    public function getName(): string | int;
+    public function getName(): string|int;
 
     public function getValue(DataTransferObjectInterface $object): mixed;
 
@@ -21,4 +21,6 @@ interface FieldInterface
     public function getTypeName(): string;
 
     public function castValue(mixed $value): mixed;
+
+    public function getAttributeInstance(string $className): ?object;
 }
