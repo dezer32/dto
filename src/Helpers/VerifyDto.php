@@ -19,7 +19,7 @@ class VerifyDto
         return is_subclass_of($object, DataTransferObjectInterface::class) || self::isAttributedDto($object);
     }
 
-    private static function isAttributedDto(mixed $object): bool
+    private static function isAttributedDto(string|object $object): bool
     {
         $reflectionClass = new ReflectionClass($object);
 

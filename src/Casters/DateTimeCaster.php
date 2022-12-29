@@ -10,7 +10,7 @@ use Dezer32\Libraries\Dto\Contracts\CasterInterface;
 
 class DateTimeCaster implements CasterInterface
 {
-    public function cast(mixed $value): ?DateTimeInterface
+    public function cast(mixed $value): DateTimeInterface|null
     {
         if ($value === null) {
             return null;

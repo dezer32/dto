@@ -17,6 +17,13 @@ class Transformer implements TransformerInterface
     ) {
     }
 
+    /**
+     * @psalm-template T of object
+     *
+     * @param class-string<T> $className
+     *
+     * @return T
+     */
     public static function transform(string $className, array $args): object
     {
         return (new static($className, $args))->toObject();
