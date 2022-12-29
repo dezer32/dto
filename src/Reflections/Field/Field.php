@@ -113,6 +113,9 @@ class Field implements FieldInterface
         return $attributes[0]->newInstance();
     }
 
+    /**
+     * @return ReflectionNamedType[]
+     */
     public function getTypes(): array
     {
         return $this->extractTypes();
