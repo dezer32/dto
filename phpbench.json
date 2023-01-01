@@ -1,0 +1,20 @@
+{
+  "$schema": "./vendor/phpbench/phpbench/phpbench.schema.json",
+  "runner.bootstrap": "vendor/autoload.php",
+  "runner.path": "tests/Benchmark",
+  "runner.progress": "blinken",
+  "runner.iterations": 10,
+  "runner.revs": 10000,
+  "runner.retry_threshold": 5,
+  "runner.file_pattern": "*Benchmark.php",
+  "report.outputs": {
+    "csv": {
+      "extends": "delimited",
+      "delimiter": ",",
+      "file": ".phpbench/report.csv"
+    }
+  },
+  "runner.php_config": {
+    "xdebug.mode": "off"
+  }
+}
